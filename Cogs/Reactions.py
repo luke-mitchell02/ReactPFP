@@ -2,7 +2,6 @@ import datetime
 import math
 
 import aiohttp
-import requests
 import io
 
 from PIL import Image, ImageDraw
@@ -16,7 +15,7 @@ class Reactions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        #self.addPFP.start()
+        self.addPFP.start()
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -49,7 +48,7 @@ class Reactions(commands.Cog):
     async def genImg(self):
         card = Image.open('Data/template.png')
         width, height = card.size
-        draw = ImageDraw.Draw(card, "RGB")
+        ImageDraw.Draw(card, "RGB")
 
         queue = await SQL.select("SELECT * FROM Queue", nested=True, dict=True)
         counter = await SQL.select("SELECT COUNT(*) FROM Reacted", one=True) or 0
@@ -58,8 +57,6 @@ class Reactions(commands.Cog):
 
         img_per_row = round(width / size)
         max_rows = round(height / size)
-
-        print(f"Width: {width}\nHeight: {height}\nPeople Wanted: {people}\nImage Size: {size}px²\nPer Row: {img_per_row}\nTotal Rows: {max_rows}\n")
 
         if queue:
             number_of_rows = math.floor(counter / img_per_row)
